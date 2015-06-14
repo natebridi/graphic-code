@@ -1,24 +1,34 @@
-int WIDTH = 800;
-int HEIGHT = 600;
-
 Circle circleMaker[];
+Poisson poisson;
 int count;
 
 void setup() {
+  
+  size(800, 600, "processing.core.PGraphicsRetina2D");
+  hint(ENABLE_RETINA_PIXELS);
+  smooth();
+
   background(255);
-  size(WIDTH, HEIGHT);
   
   circleMaker = new Circle[100];
+  poisson = new Poisson(width, height);
   count = 0;
 }
 
 void draw() {
-  for (int i = 0; i < count; i++) {
+  poisson.display();
+  /*for (int i = 0; i < count; i++) {
     circleMaker[i].display();
-  }
+  }*/
 }
 
 void mouseClicked() {
+  background(250);
+  poisson = new Poisson(width, height);
+  poisson.display();
+}
+
+/*void mouseClicked() {
   float closest;
   
   if (count == 0) {
@@ -36,6 +46,7 @@ void mouseClicked() {
   }
   count++;
 }
+*/
 
 class Circle {
   float r;      // radius
