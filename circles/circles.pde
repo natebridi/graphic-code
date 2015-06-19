@@ -1,5 +1,6 @@
 Circle circleMaker[];
 Poisson poisson;
+Palette colors;
 int count;
 
 void setup() {
@@ -8,24 +9,25 @@ void setup() {
   hint(ENABLE_RETINA_PIXELS);
   smooth();
 
-  background(255);
+  background(50);
   
   circleMaker = new Circle[100];
-  poisson = new Poisson(width, height);
+  colors = new Palette();
+  poisson = new Poisson(width, height, width/2, height/2, 200);
   count = 0;
 }
 
 void draw() {
-  poisson.display();
+  poisson.display(colors.selectColor());
   /*for (int i = 0; i < count; i++) {
     circleMaker[i].display();
   }*/
 }
 
 void mouseClicked() {
-  background(250);
-  poisson = new Poisson(width, height);
-  poisson.display();
+  background(50);
+  poisson = new Poisson(width, height, mouseX, mouseY, 200);
+  poisson.display(colors.selectColor());
 }
 
 /*void mouseClicked() {

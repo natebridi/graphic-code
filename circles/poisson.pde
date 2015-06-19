@@ -4,7 +4,10 @@ class Poisson {
   int k;
   int w;
   int h;
+  int cx;
+  int cy;
   int r;
+  int R;
   int id;
   int inner2;
   int A;
@@ -17,12 +20,16 @@ class Poisson {
   int n;
   int count;
   float dm;
+  color c;
   
-  Poisson(int _w, int _h) {
+  Poisson(int _w, int _h, int _cx, int _cy, int _R) {
     radius = 3;
     k = 50;
     w = _w;
     h = _h;
+    R = _R;
+    cx = _cx;
+    cy = _cy;
     r = radius * 2;
     inner2 = r * r;
     A = 4 * r * r - inner2;
@@ -34,10 +41,11 @@ class Poisson {
     n = 0;
     count = 0;
     dm = 1;    // distance multiplier
-    addPoint(new float[] {w /2, h /2});
+    c = color(0, 0, 0);
+    addPoint(new float[] {cx, cy}, color(0,0,0));
   }
   
-  void display() {
+  void display(color c) {
     
     if (n > -1) {
       int start = millis();
@@ -49,8 +57,8 @@ class Poisson {
         boolean validPoint = false;
         for (int j = 0; j < k && !validPoint; j++) {
           float[] q = this.generateAround(p);
-          if (q[0] > 0 && q[1] > 0 && q[0] < w && q[1] < h && !this.near(q)) {
-            this.addPoint(q);
+          if (this.inCanvas(q) && !this.near(q)) {
+            this.addPoint(q, c);
             validPoint = true;
           }
         }
@@ -63,11 +71,11 @@ class Poisson {
       
     } else {
       fill(255,0,0);
-      ellipse(w/2, h/2, r/2, r/2);
+      ellipse(cx, cy, r/2, r/2);
     }
   }
   
-  void addPoint(float[] p) {
+  void addPoint(float[] p, color c) {
     queue[n] = p;
     grid[gridWidth * (int(p[1] / cellsize)) + (int(p[0] / cellsize))] = p;
     n++;
@@ -76,7 +84,7 @@ class Poisson {
     //noFill();
     //stroke(100);
     noStroke();
-    fill(100);
+    fill(c);
     ellipse(p[0], p[1], r/2, r/2);
   }
   
@@ -86,6 +94,11 @@ class Poisson {
     return new float[] {p[0] + p2 * cos(p1), p[1] + p2 * sin(p1)};
   }
   
+  boolean inCanvas(float[] p) {
+    float d2 = sqrt(pow(p[0]-cx, 2)+pow(p[1]-cy, 2));
+    
+    return p[0] > 0 && p[1] > 0 && p[0] < w && p[1] < h && d2 < R;
+  }
   
   boolean near(float[] p) {
     int n = 2;
